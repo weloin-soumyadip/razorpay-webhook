@@ -1,0 +1,38 @@
+services:
+  razorpay-webhook:
+    build: ./
+    container_name: razorpay-webhook
+    restart: always
+    ports:
+      - "4000:3000"
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - mongo-sub
+    tmpfs:
+      - /tmp
+    command: sh -c "yarn run dev"
+    networks:
+      - nuxt-project-network
+
+  mongo-sub:
+    image: mongo:6.0
+    container_name: mongo-sub
+    restart: always
+    ports:
+      - "27018:27017"
+    volumes:
+      - db-sub:/data/db
+    networks:
+      - nuxt-project-network
+
+networks:
+  nuxt-project-network:
+    driver: bridge
+
+volumes:
+  db-sub:
+ 
