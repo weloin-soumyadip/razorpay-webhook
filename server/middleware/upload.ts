@@ -1,12 +1,16 @@
 import multer from "multer"; 
 
-const storage = multer.diskStorage({
-  destination: "public/uploads",
-  filename: (req: any, file: any, cb: any) =>{
-      const unique = Date.now() + "-" + file.originalname
-      cb(null, unique);
-  }
-});
+// for storing images on server
+// const storage = multer.diskStorage({
+//   destination: "public/uploads",
+//   filename: (req: any, file: any, cb: any) =>{
+//       const unique = Date.now() + "-" + file.originalname
+//       cb(null, unique);
+//   }
+// });
+
+// for storing images on S3
+const storage = multer.memoryStorage();
 
 const upload = multer({ storage });
 

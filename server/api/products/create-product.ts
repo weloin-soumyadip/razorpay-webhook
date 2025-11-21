@@ -1,5 +1,8 @@
+import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+
 export default defineEventHandler(async (event) => {
   try {
+    const config = useRuntimeConfig();
     const req = event.node.req;
 
     const file = (req as any).file;
@@ -8,6 +11,7 @@ export default defineEventHandler(async (event) => {
     console.log("fields:", fields);
     console.log("file:", file);
     console.log("file title is: ", fields.title)
+
     if(!fields.title || !fields.description || !fields.category || !fields.price) {
       return {
         status: 400,
@@ -21,9 +25,35 @@ export default defineEventHandler(async (event) => {
       }
     }
 
-    const cleanPath = file.path.replace(/^public\//, "");
+    // uploads to S3
+    const s3 = new S3Client({
+      region: config.awsRegion,
+      endpoint: config.awsEndpoint,
+      credentials: {
+        accessKeyId: config.awsAccessKeyId,
+        secretAccessKey: config.awsSecretAccessKey
+      }
+    });
 
-    const imagePath = `https://soumyadip.weloin.net/${cleanPath}`;
+    const fileName = `products/${Date.now()}-${file.originalname}`;
+
+    // const cleanPath = file.path.replace(/^public\//, "");
+
+    const command = new PutObjectCommand({
+      Bucket: config.awsBucketName,
+      Key: fileName,
+      Body: file.buffer,
+      ContentType: file.mimetype,
+      ACL: 'public-read'
+    });
+
+
+    console.log("s3 command is: ", command);
+
+    await s3.send(command);
+
+    // public image path
+    const imagePath = `${config.awsCdn}/${fileName}`;
 
     const createdProduct = await Product.create({
       title: fields.title,
@@ -39,6 +69,7 @@ export default defineEventHandler(async (event) => {
         message: "product create faild!"
       }
     }
+
     return {
       status: 200,
       product: createdProduct,

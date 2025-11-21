@@ -1,30 +1,41 @@
 <template>
   <div
-    class="max-w-sm mx-auto p-4 rounded-2xl shadow-lg bg-transparent border border-gray-700 flex flex-col justify-between">
-    <div>
-      <h2 class="text-xl font-semibold">{{ props.title }}</h2>
-      <p class="text-sm text-gray-500">{{ props.category }}</p>
-
-      <img :src="props.image" :alt="props.title" class="w-full h-64 object-contain rounded-xl mt-4" />
-
-      <p class="text-gray-700 text-sm mt-3">{{ props.description.length > 50 ? props.description.slice(0, 50) + "..." :
-        props.description}}</p>
-
-      <div class="flex items-center justify-start mt-4">
-        <span class="text-lg font-bold">${{ props.price }}</span>
-
-        <!-- <div class="flex items-center gap-1">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
-          <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-        </svg>
-        <span>{{ props.rating?.rate }} ({{ props.rating?.count }})</span>
-      </div> -->
-      </div>
+    class="flex flex-col border border-gray-700 rounded-2xl p-4 shadow-lg bg-transparent h-full"
+  >
+    <!-- Image -->
+    <div class="w-full h-60 bg-white/5 rounded-xl overflow-hidden flex items-center justify-center">
+      <img
+        :src="props.image"
+        :alt="props.title"
+        class="object-contain h-full w-full"
+      />
     </div>
 
-    <button @click="navigateTo(`/product/${props.id}`)" class="w-full cursor-pointer bg-black text-white py-2 rounded-xl mt-4 hover:bg-gray-950">
-      View Product
-    </button>
+    <!-- Content -->
+    <div class="flex flex-col flex-1 mt-4 gap-2">
+      <h2 class="text-lg font-semibold leading-tight">
+        {{ props.title }}
+      </h2>
+      <p class="text-xs text-gray-500">
+        {{ props.category }}
+      </p>
+
+      <p class="text-gray-400 text-sm mt-2 line-clamp-3">
+        {{ props.description }}
+      </p>
+
+      <div class="font-bold text-xl mt-3">
+        ${{ props.price }}
+      </div>
+
+      <!-- Push button to bottom -->
+      <button
+        @click="navigateTo(`/product/${props.id}`)"
+        class="bg-black text-white w-full py-2 rounded-xl mt-auto hover:bg-gray-950"
+      >
+        View Product
+      </button>
+    </div>
   </div>
 </template>
 
@@ -38,3 +49,13 @@ const props = defineProps<{
   price: number,
 }>()
 </script>
+
+<style scoped>
+/* fallback if user lacks tailwind line-clamp plugin */
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+</style>

@@ -20,6 +20,14 @@ export default defineNuxtConfig({
     razorpayKeySecret: process.env.NUXT_RAZORPAY_KEY_SECRET,
     razorpayWebhookSignature: process.env.NUXT_RAZORPAY_WEBHOOK_SIGNATURE,
     myWebhookSecret: process.env.NUXT_RAZORPAY_WEBHOOK_SECRET,
+
+    awsAccessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    awsSecretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    awsRegion: process.env.AWS_REGION,
+    awsBucketName: process.env.AWS_BUCKET_NAME,
+    awsEndpoint: process.env.AWS_ENDPOINT,
+    awsCdn: process.env.AWS_CDN,
+
     public: {
       razorpayKeyId: process.env.NUXT_RAZORPAY_KEY_ID
     }
